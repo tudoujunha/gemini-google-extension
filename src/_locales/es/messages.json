@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "Gemini for Google"
+  },
+  "appDesc": {
+    "message": "Mostrar la respuesta de Gemini junto con los resultados de la búsqueda en el motor de búsqueda"
+  }
+}
