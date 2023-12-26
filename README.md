@@ -18,7 +18,7 @@ Google, Baidu, Bing, DuckDuckGo, Brave, Yahoo, Naver, Yandex, Kagi, Searx
 
 ### Install from Chrome Web Store
 
-Chrome is reviewing, please wait. You can try installing the extension locally first.
+<a href="https://gemini4google.com/chrome?utm_source=github"><img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_128x128.png" width="24" /></a> [Chrome Web Store Link](https://gemini4google.com/chrome?utm_source=github)
 
 ### Local Install
 
