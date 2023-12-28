@@ -1,5 +1,7 @@
 # Gemini for Google
 
+[![Chrome Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/c40cd99b-9995-4ffb-bc62-091b378953f6)](https://gemini4google.com/chrome?utm_source=github)    [![Mozilla Add-ons Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d940cd-a9af-46c6-bdfa-7c5a398e3545)](https://gemini4google.com/firefox?utm_source=github)
+
 A browser extension to display Gemini (Google's AI model, currently free) response alongside Google and other search engines results.
 
 Before running this browser extension, you need to obtain the API key from Google. **API key is currently free.** 
