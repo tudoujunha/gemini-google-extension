@@ -18,15 +18,28 @@ Google, Baidu, Bing, DuckDuckGo, Brave, Yahoo, Naver, Yandex, Kagi, Searx
 
 ### Install from Chrome Web Store
 
-<a href="https://gemini4google.com/chrome?utm_source=github"><img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_128x128.png" width="24" /></a> [Chrome Web Store Link](https://gemini4google.com/chrome?utm_source=github)
+<a href="https://gemini4google.com/chrome?utm_source=github"><img src="https://github.com/alrra/browser-logos/blob/main/src/chrome/chrome_128x128.png?raw=true" width="24" /></a> [Chrome Web Store Link](https://gemini4google.com/chrome?utm_source=github)
 
-### Local Install
+
+### Install from Mozilla Add-on Store
+
+ <a href="https://gemini4google.com/firefox?utm_source=github"><img src="https://github.com/alrra/browser-logos/blob/main/src/firefox/firefox_128x128.png?raw=true" width="24" /></a> [Mozilla Add-ons Store Link](https://gemini4google.com/firefox?utm_source=github)
+
+### Local Install Chrome Extension
 
 1. Download `chromium.zip` from [Releases](https://github.com/tudoujunha/gemini-google-extension/releases).
 2. Unzip the file.
 3. In Chrome/Edge go to the extensions page (`chrome://extensions` or `edge://extensions`).
 4. Enable Developer Mode.
 5. Drag the unzipped folder anywhere on the page to import it (do not delete the folder afterwards).
+
+
+### Local Install Firefox Extension
+
+1. Download `firefox.zip` from [Releases](https://github.com/tudoujunha/gemini-google-extension/releases).
+2. Unzip the file.
+3. Go to `about:debugging`, click "This Firefox" on the sidebar.
+4. Click "Load Temporary Add-on" button, then select any file in the unzipped folder.
 
 ## Features
 
