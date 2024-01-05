@@ -1,6 +1,6 @@
 # Gemini for Google
 
-[![Chrome Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/c40cd99b-9995-4ffb-bc62-091b378953f6)](https://gemini4google.com/chrome?utm_source=github)    [![Mozilla Add-ons Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d940cd-a9af-46c6-bdfa-7c5a398e3545)](https://gemini4google.com/firefox?utm_source=github)
+[![Chrome Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/c40cd99b-9995-4ffb-bc62-091b378953f6)](https://gemini4google.com/chrome?utm_source=github) [![Mozilla Add-ons Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d940cd-a9af-46c6-bdfa-7c5a398e3545)](https://gemini4google.com/firefox?utm_source=github) [![Edge Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d0c47b-2423-4d20-ad43-4117de58c4c3)](https://gemini4google.com/edge?utm_source=github)
 
 A browser extension to display Gemini (Google's AI model, currently free) response alongside Google and other search engines results.
 
@@ -27,7 +27,11 @@ Google, Baidu, Bing, DuckDuckGo, Brave, Yahoo, Naver, Yandex, Kagi, Searx
 
  <a href="https://gemini4google.com/firefox?utm_source=github"><img src="https://github.com/alrra/browser-logos/blob/main/src/firefox/firefox_128x128.png?raw=true" width="24" /></a> [Mozilla Add-ons Store Link](https://gemini4google.com/firefox?utm_source=github)
 
-### Local Install Chrome Extension
+### Install from Edge Web Store
+
+<a href="https://gemini4google.com/edge?utm_source=github"><img src="https://github.com/alrra/browser-logos/blob/main/src/edge/edge_128x128.png?raw=true" width="24" /></a> [Edge Web Store Link](https://gemini4google.com/edge?utm_source=github)
+
+### Local Install Chrome/Edge Extension
 
 1. Download `chromium.zip` from [Releases](https://github.com/tudoujunha/gemini-google-extension/releases).
 2. Unzip the file.
