@@ -3,6 +3,7 @@
   "author": "tudoujunha",
   "scripts": {
     "build": "node build.mjs",
+    "preview": "node build-preview.mjs",
     "lint": "eslint --ext .js,.mjs,.jsx .",
     "lint:fix": "eslint --ext .js,.mjs,.jsx . --fix",
     "prepare": "husky install",
