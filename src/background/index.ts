@@ -11,8 +11,8 @@ async function generateAnswers(port: Browser.Runtime.Port, question: string) {
   if (providerConfigs.provider === ProviderType.Gemini) {
     const { apiKey } = providerConfigs.configs[ProviderType.Gemini]!
     provider = new GeminiProvider(apiKey)
-  } else if (providerConfigs.provider === ProviderType.GPT3) {
-    const { apiKey, model } = providerConfigs.configs[ProviderType.GPT3]!
+  } else if (providerConfigs.provider === ProviderType.OpenAI) {
+    const { apiKey, model } = providerConfigs.configs[ProviderType.OpenAI]!
     provider = new OpenAIProvider(apiKey, model)
   } else {
     throw new Error(`Unknown provider ${providerConfigs.provider}`)

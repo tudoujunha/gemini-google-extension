@@ -10,8 +10,7 @@ interface ConfigProps {
 
 async function loadModels(): Promise<string[]> {
   const configs = {
-    openai_model_names: ['text-davinci-003'],
-    openai_chat_model_names: ['gpt-3.5-turbo'],
+    openai_model_names: ['gpt-3.5-turbo','gpt-4-turbo-preview','gpt-4'],
   }
   return configs.openai_model_names
 }
@@ -19,8 +18,8 @@ async function loadModels(): Promise<string[]> {
 const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: geminiApiKey } = useInput(config.configs[ProviderType.Gemini]?.apiKey ?? '')
-  const { bindings: gpt3ApiKey } = useInput(config.configs[ProviderType.GPT3]?.apiKey ?? '')
-  const [model, setModel] = useState(config.configs[ProviderType.GPT3]?.model ?? models[0])
+  const { bindings: openaiApiKey } = useInput(config.configs[ProviderType.OpenAI]?.apiKey ?? '')
+  const [model, setModel] = useState(config.configs[ProviderType.OpenAI]?.model ?? models[0])
   const { setToast } = useToasts()
 
   const save = useCallback(async () => {
@@ -29,8 +28,8 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
         alert('Please enter your Google Gemini API key')
         return
       }
-    } else if (tab === ProviderType.GPT3) {
-      if (!gpt3ApiKey.value) {
+    } else if (tab === ProviderType.OpenAI) {
+      if (!openaiApiKey.value) {
         alert('Please enter your OpenAI API key')
         return
       }
@@ -44,13 +43,13 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
       [ProviderType.Gemini]: {
         apiKey: geminiApiKey.value,
       },
-      [ProviderType.GPT3]: {
+      [ProviderType.OpenAI]: {
         model,
-        apiKey: gpt3ApiKey.value,
+        apiKey: openaiApiKey.value,
       },
     })
     setToast({ text: 'Changes saved', type: 'success' })
-  }, [geminiApiKey.value, gpt3ApiKey.value, model, models, setToast, tab])
+  }, [geminiApiKey.value, openaiApiKey.value, model, models, setToast, tab])
 
   return (
     <div className="flex flex-col gap-3">
@@ -71,7 +70,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
             </span>
           </div>
         </Tabs.Item>
-        <Tabs.Item label="OpenAI API" value={ProviderType.GPT3}>
+        <Tabs.Item label="OpenAI API" value={ProviderType.OpenAI}>
           <div className="flex flex-col gap-2">
             <span>
               OpenAI official API, more stable,{' '}
@@ -90,7 +89,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
                   </Select.Option>
                 ))}
               </Select>
-              <Input htmlType="password" label="API key" scale={2 / 3} {...gpt3ApiKey} />
+              <Input htmlType="password" label="API key" scale={2 / 3} {...openaiApiKey} />
             </div>
             <span className="italic text-xs">
               You can find or create your API key{' '}

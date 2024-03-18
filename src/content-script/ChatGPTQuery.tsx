@@ -7,6 +7,7 @@ import Browser from 'webextension-polyfill'
 import { Answer } from '../messaging'
 import ChatGPTFeedback from './ChatGPTFeedback'
 import { isBraveBrowser, shouldShowRatingTip } from './utils.js'
+import { ProviderType, getStoredProviderType } from '../config'
 
 export type QueryStatus = 'success' | 'error' | undefined
 
@@ -22,6 +23,7 @@ function ChatGPTQuery(props: Props) {
   const [done, setDone] = useState(false)
   const [showTip, setShowTip] = useState(false)
   const [status, setStatus] = useState<QueryStatus>()
+  const [providerType, setProviderType] = useState(ProviderType.Gemini.toString());
 
   useEffect(() => {
     props.onStatusChange?.(status)
@@ -66,6 +68,15 @@ function ChatGPTQuery(props: Props) {
     shouldShowRatingTip().then((show) => setShowTip(show))
   }, [])
 
+  useEffect(() => {
+    async function fetchProviderType() {
+      const type = await getStoredProviderType();
+      setProviderType(type);
+    }
+
+    fetchProviderType();
+  }, []);
+
   const openOptionsPage = useCallback(() => {
     Browser.runtime.sendMessage({ type: 'OPEN_OPTIONS_PAGE' })
   }, [])
@@ -74,7 +85,7 @@ function ChatGPTQuery(props: Props) {
     return (
       <div className="markdown-body gpt-markdown" id="gpt-answer" dir="auto">
         <div className="gpt-header">
-          <span className="font-bold">Gemini</span>
+          <span className="font-bold">{providerType}</span>
           <span className="cursor-pointer leading-[0]" onClick={openOptionsPage}>
             <GearIcon size={14} />
           </span>
@@ -133,12 +144,26 @@ function ChatGPTQuery(props: Props) {
       </p>
     )
   }
-  if (error) {
+  else if (error) {
     return (
-      <p>
-        Failed to load response from Gemini:
-        <span className="break-all block">{error}</span>
-      </p>
+      <div className="markdown-body gpt-markdown" id="gpt-answer" dir="auto">
+        <div className="gpt-header">
+          <span className="font-bold">{providerType}</span>
+          <span className="cursor-pointer leading-[0]" onClick={openOptionsPage}>
+            <GearIcon size={14} />
+          </span>
+        </div>
+        <p>
+          Failed to load response from {providerType}:
+          <span className="break-all block">{error}</span>
+        </p>
+        <p className="font-bold">Please confirm that your API key is configured correctly{' '}
+          <span className='cursor-pointer text-blue-600 hover:text-blue-800 underline'
+            onClick={openOptionsPage}>
+            here (find AI Provider)
+          </span>
+        </p>
+      </div>
     )
   }
 

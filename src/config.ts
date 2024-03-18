@@ -56,11 +56,11 @@ export async function updateUserConfig(updates: Partial<UserConfig>) {
 }
 
 export enum ProviderType {
-  Gemini = 'gemini',
-  GPT3 = 'gpt3',
+  Gemini = 'Gemini',
+  OpenAI = 'OpenAI',
 }
 
-interface GPT3ProviderConfig {
+interface OpenAIProviderConfig {
   model: string
   apiKey: string
 }
@@ -73,21 +73,26 @@ export interface ProviderConfigs {
   provider: ProviderType
   configs: {
     [ProviderType.Gemini]: GeminiProviderConfig | undefined
-    [ProviderType.GPT3]: GPT3ProviderConfig | undefined
+    [ProviderType.OpenAI]: OpenAIProviderConfig | undefined
   }
+}
+
+export async function getStoredProviderType(): Promise<string> {
+  const { provider = ProviderType.Gemini } = await Browser.storage.local.get('provider');
+  return provider;
 }
 
 export async function getProviderConfigs(): Promise<ProviderConfigs> {
   const { provider = ProviderType.Gemini } = await Browser.storage.local.get('provider')
   const configGeminiKey = `provider:${ProviderType.Gemini}`
-  const configGPT3Key = `provider:${ProviderType.GPT3}`
+  const configOpenAIKey = `provider:${ProviderType.OpenAI}`
   const resultGeminKey = await Browser.storage.local.get(configGeminiKey)
-  const resultGPT3Key = await Browser.storage.local.get(configGPT3Key)
+  const resultOpenAIKey = await Browser.storage.local.get(configOpenAIKey)
   return {
     provider,
     configs: {
       [ProviderType.Gemini]: resultGeminKey[configGeminiKey],
-      [ProviderType.GPT3]: resultGPT3Key[configGPT3Key],
+      [ProviderType.OpenAI]: resultOpenAIKey[configOpenAIKey],
     },
   }
 }
@@ -99,6 +104,6 @@ export async function saveProviderConfigs(
   return Browser.storage.local.set({
     provider,
     [`provider:${ProviderType.Gemini}`]: configs[ProviderType.Gemini],
-    [`provider:${ProviderType.GPT3}`]: configs[ProviderType.GPT3],
+    [`provider:${ProviderType.OpenAI}`]: configs[ProviderType.OpenAI],
   })
 }
