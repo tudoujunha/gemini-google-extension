@@ -8,7 +8,7 @@ import process from 'node:process'
 import tailwindcss from 'tailwindcss'
 dotenv.config()
 
-const outdir = 'build'
+const outdir = 'preview'
 
 async function deleteOldDir() {
   await fs.remove(outdir)
@@ -71,14 +71,14 @@ async function build() {
   await runEsbuild()
 
   const commonFiles = [
-    { src: 'build/content-script/index.js', dst: 'content-script.js' },
-    { src: 'build/content-script/index.js.map', dst: 'content-script.js.map' }, // 复制源码地图
-    { src: 'build/content-script/index.css', dst: 'content-script.css' },
-    { src: 'build/background/index.js', dst: 'background.js' },
-    { src: 'build/background/index.js.map', dst: 'background.js.map' }, // 复制源码地图
-    { src: 'build/options/index.js', dst: 'options.js' },
-    { src: 'build/options/index.js.map', dst: 'options.js.map' }, // 复制源码地图
-    { src: 'build/options/index.css', dst: 'options.css' },
+    { src: 'preview/content-script/index.js', dst: 'content-script.js' },
+    { src: 'preview/content-script/index.js.map', dst: 'content-script.js.map' },
+    { src: 'preview/content-script/index.css', dst: 'content-script.css' },
+    { src: 'preview/background/index.js', dst: 'background.js' },
+    { src: 'preview/background/index.js.map', dst: 'background.js.map' },
+    { src: 'preview/options/index.js', dst: 'options.js' },
+    { src: 'preview/options/index.js.map', dst: 'options.js.map' },
+    { src: 'preview/options/index.css', dst: 'options.css' },
     { src: 'src/options/index.html', dst: 'options.html' },
     { src: 'src/logo.png', dst: 'logo.png' },
     { src: 'src/_locales', dst: '_locales' },
@@ -104,10 +104,10 @@ async function build() {
   // await zipFolder(`./${outdir}/chromium`)
 
   // firefox
-  await copyFiles(
-    [...commonFiles, { src: 'src/manifest.v2.json', dst: 'manifest.json' }],
-    `./${outdir}/firefox`,
-  )
+  // await copyFiles(
+  //   [...commonFiles, { src: 'src/manifest.v2.json', dst: 'manifest.json' }],
+  //   `./${outdir}/firefox`,
+  // )
 
   // await zipFolder(`./${outdir}/firefox`)
 
