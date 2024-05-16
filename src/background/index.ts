@@ -9,8 +9,8 @@ async function generateAnswers(port: Browser.Runtime.Port, question: string) {
 
   let provider: Provider
   if (providerConfigs.provider === ProviderType.Gemini) {
-    const { apiKey } = providerConfigs.configs[ProviderType.Gemini]!
-    provider = new GeminiProvider(apiKey)
+    const { apiKey,model_gemini } = providerConfigs.configs[ProviderType.Gemini]!
+    provider = new GeminiProvider(apiKey, model_gemini)
   } else if (providerConfigs.provider === ProviderType.OpenAI) {
     const { apiKey, model } = providerConfigs.configs[ProviderType.OpenAI]!
     provider = new OpenAIProvider(apiKey, model)

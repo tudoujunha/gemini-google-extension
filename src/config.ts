@@ -66,6 +66,7 @@ interface OpenAIProviderConfig {
 }
 
 interface GeminiProviderConfig {
+  model_gemini: string
   apiKey: string
 }
 

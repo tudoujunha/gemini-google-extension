@@ -8,8 +8,9 @@ import { GenerateAnswerParams, Provider } from '../types'
 export class GeminiProvider implements Provider {
   private genAI: GoogleGenerativeAI
 
-  constructor(private token: string) {
+  constructor(private token: string , private model_gemini: string) {
     this.token = token
+    this.model_gemini = model_gemini
     this.genAI = new GoogleGenerativeAI(this.token)
   }
 
@@ -21,7 +22,6 @@ export class GeminiProvider implements Provider {
       maxOutputTokens: 8192,
       responseMimeType: "text/plain",
     };
-    
     const safetySettings = [
       {
         category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -40,9 +40,8 @@ export class GeminiProvider implements Provider {
         threshold: HarmBlockThreshold.BLOCK_NONE,
       },
     ];
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' ,safetySettings , generationConfig})
+    const model = this.genAI.getGenerativeModel({ model: this.model_gemini , safetySettings, generationConfig});
     const result = await model.generateContentStream(params.prompt)
-    
     let text = ''
     for await (const chunk of result.stream) {
       const chunkText = chunk.text()

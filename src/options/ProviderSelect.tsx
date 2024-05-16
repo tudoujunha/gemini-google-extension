@@ -6,6 +6,7 @@ import { getProviderConfigs, ProviderConfigs, ProviderType, saveProviderConfigs 
 interface ConfigProps {
   config: ProviderConfigs
   models: string[]
+  models_gemini: string[]
 }
 
 async function loadModels(): Promise<string[]> {
@@ -14,18 +15,28 @@ async function loadModels(): Promise<string[]> {
   }
   return configs.openai_model_names
 }
+async function loadModels_gemini(): Promise<string[]> {
+  const configs = {
+    gemini_model_names: ["gemini-1.5-flash-latest", "gemini-1.5-pro-latest", "gemini-1.0-pro"]
+  }
+  return configs.gemini_model_names
+}
 
-const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
+const ConfigPanel: FC<ConfigProps> = ({ config, models,models_gemini }) => {
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: geminiApiKey } = useInput(config.configs[ProviderType.Gemini]?.apiKey ?? '')
   const { bindings: openaiApiKey } = useInput(config.configs[ProviderType.OpenAI]?.apiKey ?? '')
   const [model, setModel] = useState(config.configs[ProviderType.OpenAI]?.model ?? models[0])
+  const [model_gemini, setModel_gemini] = useState(config.configs[ProviderType.Gemini]?.model_gemini ?? models_gemini[0])
   const { setToast } = useToasts()
-
   const save = useCallback(async () => {
     if (tab === ProviderType.Gemini) {
       if (!geminiApiKey.value) {
         alert('Please enter your Google Gemini API key')
+        return
+      }
+      if (!model_gemini || !models_gemini.includes(model_gemini)) {
+        alert('Please select a valid model')
         return
       }
     } else if (tab === ProviderType.OpenAI) {
@@ -41,6 +52,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
 
     await saveProviderConfigs(tab, {
       [ProviderType.Gemini]: {
+        model_gemini,
         apiKey: geminiApiKey.value,
       },
       [ProviderType.OpenAI]: {
@@ -49,7 +61,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
       },
     })
     setToast({ text: 'Changes saved', type: 'success' })
-  }, [geminiApiKey.value, openaiApiKey.value, model, models, setToast, tab])
+  }, [geminiApiKey.value, openaiApiKey.value, model_gemini , models_gemini, model, models, setToast, tab])
 
   return (
     <div className="flex flex-col gap-3">
@@ -60,6 +72,18 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
               Google Gemini API, <span className="font-semibold">free for now</span>
             </span>
             <div className="flex flex-row gap-2">
+              <Select
+                  scale={2 / 3}
+                  value={model_gemini}
+                  onChange={(v) => setModel_gemini(v as string)}
+                  placeholder="model_gemini"
+                >
+                  {models_gemini.map((m) => (
+                    <Select.Option key={m} value={m}>
+                      {m}
+                    </Select.Option>
+                  ))}
+                </Select>
               <Input htmlType="password" label="API key" scale={2 / 3} {...geminiApiKey} />
             </div>
             <span className="italic text-xs">
@@ -113,13 +137,13 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
 
 function ProviderSelect() {
   const query = useSWR('provider-configs', async () => {
-    const [config, models] = await Promise.all([getProviderConfigs(), loadModels()])
-    return { config, models }
+    const [config, models, models_gemini] = await Promise.all([getProviderConfigs(), loadModels(), loadModels_gemini()])
+    return { config, models,models_gemini }
   })
   if (query.isLoading) {
     return <Spinner />
   }
-  return <ConfigPanel config={query.data!.config} models={query.data!.models} />
+  return <ConfigPanel config={query.data!.config} models={query.data!.models} models_gemini={query.data!.models_gemini} />
 }
 
 export default ProviderSelect
