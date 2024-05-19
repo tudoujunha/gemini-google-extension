@@ -167,7 +167,7 @@ function ChatGPTQuery(props: Props) {
     )
   }
 
-  return <p className="text-[#b6b8ba] animate-pulse">Waiting for Gemini response...</p>
+  return <p className="text-[#b6b8ba] animate-pulse">Waiting for {providerType} response...</p>
 }
 
 export default memo(ChatGPTQuery)
