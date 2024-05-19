@@ -10,7 +10,7 @@ interface ConfigProps {
 const ConfigPanel: FC<ConfigProps> = ({ config }) => {
 
   const geminiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].baseUrl
-  const geminiModel = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].models[0]
+  const geminiModels = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].models
 
   const openaiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].baseUrl
   const openaiModels = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].models
@@ -18,16 +18,22 @@ const ConfigPanel: FC<ConfigProps> = ({ config }) => {
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: geminiApiKey } = useInput(config.configs[ProviderType.Gemini]?.apiKey ?? '')
   const { bindings: geminiBaseUrl } = useInput(config.configs[ProviderType.Gemini]?.baseUrl ?? '')
+  const [geminiModel, setGeminiModel] = useState(config.configs[ProviderType.Gemini]?.model ?? geminiModels[0])
 
   const { bindings: openaiApiKey } = useInput(config.configs[ProviderType.OpenAI]?.apiKey ?? '')
   const { bindings: openaiBaseUrl } = useInput(config.configs[ProviderType.OpenAI]?.baseUrl ?? '')
   const [openaiModel, setOpenaiModel] = useState(config.configs[ProviderType.OpenAI]?.model ?? openaiModels[0])
+
   const { setToast } = useToasts()
 
   const save = useCallback(async () => {
     if (tab === ProviderType.Gemini) {
       if (!geminiApiKey.value) {
         alert('Please enter your Google Gemini API key')
+        return
+      }
+      if (!geminiModel || !geminiModels.includes(geminiModel)) {
+        alert('Please select a valid model')
         return
       }
     } else if (tab === ProviderType.OpenAI) {
@@ -45,6 +51,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config }) => {
       [ProviderType.Gemini]: {
         apiKey: geminiApiKey.value,
         baseUrl: geminiBaseUrl.value,
+        model: geminiModel,
       },
       [ProviderType.OpenAI]: {
         apiKey: openaiApiKey.value,
@@ -53,7 +60,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config }) => {
       },
     })
     setToast({ text: 'Changes saved', type: 'success' })
-  }, [geminiApiKey.value, openaiApiKey.value, openaiModel, openaiModels, setToast, tab])
+  }, [geminiApiKey.value, geminiModel, geminiModels, openaiApiKey.value, openaiModel, openaiModels, setToast, tab])
 
   return (
     <div className="flex flex-col gap-3">
@@ -64,7 +71,17 @@ const ConfigPanel: FC<ConfigProps> = ({ config }) => {
               Google Gemini API, <span className="font-semibold">free for now</span>
             </span>
             <div className="flex flex-row gap-2">
-              <Input readOnly scale={2 / 3} initialValue={geminiModel} />
+              <Select
+                scale={2 / 3}
+                value={geminiModel}
+                onChange={(v) => setGeminiModel(v as string)}
+                placeholder="model">
+                {geminiModels.map((m) => (
+                  <Select.Option key={m} value={m}>
+                    {m}
+                  </Select.Option>
+                ))}
+              </Select>
               <Input.Password label="API key" scale={2 / 3} {...geminiApiKey} width="100%" />
             </div>
             <Collapse title="Custom Endpoint" scale={1 / 4}>
