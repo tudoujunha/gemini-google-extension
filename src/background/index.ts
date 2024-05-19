@@ -1,19 +1,25 @@
 import Browser from 'webextension-polyfill'
-import { getProviderConfigs, ProviderType } from '../config'
+import { getProviderConfigs, ProviderType, PROVIDER_CONFIG_DEFAULT } from '../config'
 import { GeminiProvider } from './providers/gemini'
 import { OpenAIProvider } from './providers/openai'
 import { Provider } from './types'
 
 async function generateAnswers(port: Browser.Runtime.Port, question: string) {
   const providerConfigs = await getProviderConfigs()
+  const geminiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].baseUrl
+  const geminiModel = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].models[0]
+
+  const openaiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].baseUrl
+  const openaiModel = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].models[0]
+
 
   let provider: Provider
   if (providerConfigs.provider === ProviderType.Gemini) {
-    const { apiKey } = providerConfigs.configs[ProviderType.Gemini]!
-    provider = new GeminiProvider(apiKey)
+    const { apiKey, baseUrl = geminiDefUrl, model = geminiModel } = providerConfigs.configs[ProviderType.Gemini]!
+    provider = new GeminiProvider(apiKey, baseUrl, model)
   } else if (providerConfigs.provider === ProviderType.OpenAI) {
-    const { apiKey, model } = providerConfigs.configs[ProviderType.OpenAI]!
-    provider = new OpenAIProvider(apiKey, model)
+    const { apiKey, model = openaiModel, baseUrl = openaiDefUrl } = providerConfigs.configs[ProviderType.OpenAI]!
+    provider = new OpenAIProvider(apiKey, baseUrl, model)
   } else {
     throw new Error(`Unknown provider ${providerConfigs.provider}`)
   }

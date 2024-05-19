@@ -4,13 +4,14 @@ import { GenerateAnswerParams, Provider } from '../types'
 export class GeminiProvider implements Provider {
   private genAI: GoogleGenerativeAI
 
-  constructor(private token: string) {
-    this.token = token
-    this.genAI = new GoogleGenerativeAI(this.token)
+  constructor(token: string, private baseUrl: string, private model: string) {
+    this.genAI = new GoogleGenerativeAI(token);
+    this.baseUrl = baseUrl;
+    this.model = model;
   }
 
   async generateAnswer(params: GenerateAnswerParams) {
-    const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' })
+    const model = this.genAI.getGenerativeModel({ model: this.model }, { baseUrl: this.baseUrl })
     const result = await model.generateContentStream(params.prompt)
     let text = ''
     for await (const chunk of result.stream) {

@@ -1,25 +1,27 @@
-import { Button, Input, Select, Spinner, Tabs, useInput, useToasts } from '@geist-ui/core'
+import { Button, Collapse, Input, Select, Spinner, Tabs, useInput, useToasts } from '@geist-ui/core'
 import { FC, useCallback, useState } from 'react'
 import useSWR from 'swr'
-import { getProviderConfigs, ProviderConfigs, ProviderType, saveProviderConfigs } from '../config'
+import { getProviderConfigs, ProviderConfigs, ProviderType, saveProviderConfigs, PROVIDER_CONFIG_DEFAULT } from '../config'
 
 interface ConfigProps {
   config: ProviderConfigs
-  models: string[]
 }
 
-async function loadModels(): Promise<string[]> {
-  const configs = {
-    openai_model_names: ['gpt-3.5-turbo','gpt-4-turbo-preview','gpt-4'],
-  }
-  return configs.openai_model_names
-}
+const ConfigPanel: FC<ConfigProps> = ({ config }) => {
 
-const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
+  const geminiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].baseUrl
+  const geminiModel = PROVIDER_CONFIG_DEFAULT[ProviderType.Gemini].models[0]
+
+  const openaiDefUrl = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].baseUrl
+  const openaiModels = PROVIDER_CONFIG_DEFAULT[ProviderType.OpenAI].models
+
   const [tab, setTab] = useState<ProviderType>(config.provider)
   const { bindings: geminiApiKey } = useInput(config.configs[ProviderType.Gemini]?.apiKey ?? '')
+  const { bindings: geminiBaseUrl } = useInput(config.configs[ProviderType.Gemini]?.baseUrl ?? '')
+
   const { bindings: openaiApiKey } = useInput(config.configs[ProviderType.OpenAI]?.apiKey ?? '')
-  const [model, setModel] = useState(config.configs[ProviderType.OpenAI]?.model ?? models[0])
+  const { bindings: openaiBaseUrl } = useInput(config.configs[ProviderType.OpenAI]?.baseUrl ?? '')
+  const [openaiModel, setOpenaiModel] = useState(config.configs[ProviderType.OpenAI]?.model ?? openaiModels[0])
   const { setToast } = useToasts()
 
   const save = useCallback(async () => {
@@ -33,7 +35,7 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
         alert('Please enter your OpenAI API key')
         return
       }
-      if (!model || !models.includes(model)) {
+      if (!openaiModel || !openaiModels.includes(openaiModel)) {
         alert('Please select a valid model')
         return
       }
@@ -42,14 +44,16 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
     await saveProviderConfigs(tab, {
       [ProviderType.Gemini]: {
         apiKey: geminiApiKey.value,
+        baseUrl: geminiBaseUrl.value,
       },
       [ProviderType.OpenAI]: {
-        model,
         apiKey: openaiApiKey.value,
+        baseUrl: openaiBaseUrl.value,
+        model: openaiModel,
       },
     })
     setToast({ text: 'Changes saved', type: 'success' })
-  }, [geminiApiKey.value, openaiApiKey.value, model, models, setToast, tab])
+  }, [geminiApiKey.value, openaiApiKey.value, openaiModel, openaiModels, setToast, tab])
 
   return (
     <div className="flex flex-col gap-3">
@@ -60,8 +64,12 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
               Google Gemini API, <span className="font-semibold">free for now</span>
             </span>
             <div className="flex flex-row gap-2">
-              <Input htmlType="password" label="API key" scale={2 / 3} {...geminiApiKey} />
+              <Input readOnly scale={2 / 3} initialValue={geminiModel} />
+              <Input.Password label="API key" scale={2 / 3} {...geminiApiKey} width="100%" />
             </div>
+            <Collapse title="Custom Endpoint" scale={1 / 4}>
+              <Input label="Endpoint URL" placeholder={geminiDefUrl} scale={2 / 3} {...geminiBaseUrl} width="100%" />
+            </Collapse>
             <span className="italic text-xs">
               You can find or create your API key{' '}
               <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noreferrer">
@@ -79,18 +87,21 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
             <div className="flex flex-row gap-2">
               <Select
                 scale={2 / 3}
-                value={model}
-                onChange={(v) => setModel(v as string)}
-                placeholder="model"
-              >
-                {models.map((m) => (
+                value={openaiModel}
+                onChange={(v) => setOpenaiModel(v as string)}
+                placeholder="model">
+                {openaiModels.map((m) => (
                   <Select.Option key={m} value={m}>
                     {m}
                   </Select.Option>
                 ))}
               </Select>
-              <Input htmlType="password" label="API key" scale={2 / 3} {...openaiApiKey} />
+              <Input.Password htmlType="password" label="API key" scale={2 / 3} {...openaiApiKey} width="100%" />
             </div>
+            <Collapse title="Custom Endpoint" scale={1 / 4}>
+              <Input label="Endpoint URL" placeholder={openaiDefUrl} scale={2 / 3} {...openaiBaseUrl} width="100%" />
+            </Collapse>
+
             <span className="italic text-xs">
               You can find or create your API key{' '}
               <a
@@ -113,13 +124,13 @@ const ConfigPanel: FC<ConfigProps> = ({ config, models }) => {
 
 function ProviderSelect() {
   const query = useSWR('provider-configs', async () => {
-    const [config, models] = await Promise.all([getProviderConfigs(), loadModels()])
-    return { config, models }
+    const config = await getProviderConfigs()
+    return { config }
   })
   if (query.isLoading) {
     return <Spinner />
   }
-  return <ConfigPanel config={query.data!.config} models={query.data!.models} />
+  return <ConfigPanel config={query.data!.config} />
 }
 
 export default ProviderSelect

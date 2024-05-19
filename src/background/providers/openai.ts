@@ -1,13 +1,13 @@
+import { joinUrl } from '../../utils';
 import { GenerateAnswerParams, Provider } from '../types'
 import OpenAI from "openai";
 
 export class OpenAIProvider implements Provider {
   private openai: OpenAI;
 
-  constructor(private token: string, private model: string) {
-    this.token = token
-    this.model = model
-    this.openai = new OpenAI({ apiKey: this.token });
+  constructor(token: string, baseUrl: string, private model: string) {
+    this.model = model;
+    this.openai = new OpenAI({ baseURL: joinUrl(baseUrl, 'v1'), apiKey: token });
   }
 
   async generateAnswer(params: GenerateAnswerParams) {

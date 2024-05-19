@@ -11,3 +11,7 @@ export function detectSystemColorScheme() {
 export function getExtensionVersion() {
   return Browser.runtime.getManifest().version
 }
+
+export function joinUrl(baseURL: string, path: string) {
+  return `${baseURL.replace(/\/?$/, '/')}${path.replace(/^\//, '')}`;
+}
