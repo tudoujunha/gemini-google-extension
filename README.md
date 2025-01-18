@@ -1,5 +1,10 @@
 # Gemini for Google
 
+## Notice (2024-09-20)
+The extension project has been banned from being published on the Google Web Store, and I will no longer maintain it.
+If you're interested, you can customize more features yourself and publish it on the Google Web Store.
+
+
 [![Chrome Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/c40cd99b-9995-4ffb-bc62-091b378953f6)](https://gemini4google.com/chrome?utm_source=github) [![Mozilla Add-ons Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d940cd-a9af-46c6-bdfa-7c5a398e3545)](https://gemini4google.com/firefox?utm_source=github) [![Edge Web Store Link](https://github.com/tudoujunha/gemini-google-extension/assets/131859738/82d0c47b-2423-4d20-ad43-4117de58c4c3)](https://gemini4google.com/edge?utm_source=github)
 
 A browser extension to display Gemini (Google's AI model, currently free) response alongside Google and other search engines results.
